@@ -13,7 +13,8 @@ void main() {
   // imprimir o nome aluno com atributo classe
   print("--- Lista de Alunos ---");
   for (var aluno in listaDeObjetos) {
-    print("Nome: ${aluno.nome}"); 
+    //print("Nome: ${aluno.nome}"); 
+    print("ID: ${aluno.id} Nome: ${aluno.nome} Telefone: ${aluno.telefone ?? 'Sem telefone'}");
   }
 }
 
