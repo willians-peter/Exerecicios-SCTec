@@ -146,11 +146,29 @@ final listaPedidos = [
 List<Operacao> pedidosObjetos = listaPedidos
       .map((mapa) => Operacao.fromMap(mapa))
       .toList();
+  
 print("--- Lista de Pedidos ---");
+
 for (var operacao in pedidosObjetos) {
+  print("\n========================================");
+  print("ID Pedido: ${operacao.pedido.idPedido}");
+  print("Cliente: ${operacao.cliente.nome} (${operacao.cliente.email})");
+  print("Status: ${operacao.pedido.status}");
+  print("Pagamento: ${operacao.pagamento.metodo} (${operacao.pagamento.parcelas}x)");
+  print("----------------------------------------");
+  print("Itens do Pedido:");
+
+  double totalPedido = 0.0;
+
   for (var prod in operacao.produtos) {
-    print("  -> ${prod.nome}");
+    double valorTotalItem = prod.precoUnitario * prod.quantidade;
+    totalPedido += valorTotalItem;
+
+    print("  -> ${prod.quantidade}x ${prod.nome} | Unidade: R\$ ${prod.precoUnitario.toStringAsFixed(2)} | Total Item: R\$ ${valorTotalItem.toStringAsFixed(2)}");
   }
-  print("ID Pedido: ${operacao.pedido.idPedido} - Cliente: ${operacao.cliente.nome} - Pagamento: ${operacao.pagamento.metodo} - Status: ${operacao.pedido.status}");
+
+  print("----------------------------------------");
+  print("Valor Total do Pedido: R\$ ${totalPedido.toStringAsFixed(2)}");
+  print("========================================");
 }
 }
