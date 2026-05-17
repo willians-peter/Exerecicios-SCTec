@@ -1,18 +1,14 @@
 
-
-
-
-
 class Operacao {
   final Pedido pedido;
   final Cliente cliente;  
   final Pagamento pagamento;
-  final Produto produto;
+  final List<Produto> produtos;
 Operacao({
   required this.pedido,
   required this.cliente,
   required this.pagamento,
-  required this.produto,  
+  required this.produtos,
 });
 
 Operacao.fromMap(Map<String, dynamic> map)
@@ -31,12 +27,14 @@ Operacao.fromMap(Map<String, dynamic> map)
         parcelas: map['pagamento']['parcelas'],
         confirmado: map['pagamento']['confirmado'],
       ),
-      produto = Produto(
-        idProduto: map['itens'][0]['id_produto'],
-        nome: map['itens'][0]['nome'],
-        precoUnitario: map['itens'][0]['preco_unitario'],
-        quantidade: map['itens'][0]['quantidade'],
-      );
+      produtos = (map['itens'] as List).map((item) {
+          return Produto(
+            idProduto: item['id_produto'],
+            nome: item['nome'],
+            precoUnitario: item['preco_unitario'].toDouble(), // .toDouble() evita erros se o número vier sem ponto
+            quantidade: item['quantidade'],
+          );
+        }).toList();
 }
 
 class Pedido {
@@ -78,12 +76,15 @@ class Produto {
   final String nome;
   final double precoUnitario;
   final int quantidade;
+  List<Produto> itens;
 
 Produto({
   required this.idProduto,  
   required this.nome,
   required this.precoUnitario,    
-  required this.quantidade,   
+  required this.quantidade,
+  this.itens = const [],
+
 });
 }
 
@@ -147,7 +148,9 @@ List<Operacao> pedidosObjetos = listaPedidos
       .toList();
 print("--- Lista de Pedidos ---");
 for (var operacao in pedidosObjetos) {
-  print("ID Pedido: ${operacao.pedido.idPedido} - Cliente: ${operacao.cliente.nome} - Produto: ${operacao.produto.nome} - Status: ${operacao.pedido.status}");
-
+  for (var prod in operacao.produtos) {
+    print("  -> ${prod.nome}");
+  }
+  print("ID Pedido: ${operacao.pedido.idPedido} - Cliente: ${operacao.cliente.nome} - Pagamento: ${operacao.pagamento.metodo} - Status: ${operacao.pedido.status}");
 }
 }
